@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 
 from .load_index_conf import LoadIndexConfiguration as LIC
-
 from elasticsearch import Elasticsearch, ElasticsearchException, ConnectionTimeout, TransportError
 from datetime import datetime
 import logging
@@ -95,31 +95,38 @@ class ESIndices(ESCluster):
         print("ElasticFile: ",elasticFile)
         print("DATA: ",telemetry)
         data2index = LIC(elasticFile, telemetry)
+        print("data2index ",data2index.msg)
         try:
-            self.es.index(index=indexName, doc_type=indexType, 
-                          timestamp=datetime.utcnow().isoformat(), 
-                          body= data2index)
+            self.es.index(index = indexName, doc_type = indexType, 
+                          timestamp = datetime.utcnow().isoformat(), 
+                          body = data2index.msg)
         except ElasticsearchException as e:
+            print("ERROR: ",e)
             logger.error(
                 "Error inserting data %s in cluster: %s"%(indexName,e)
                 )
             pass
         return True
         
-    def create_index(self, index_name):
+    def create_index(self, indexName, indexShards, indexReplicas):
         """
         Creates the index defined in the configuration file.  
         Sharding and replicas are defined in setup.json.  
         """
-        print("Index %s don't exist, creating"%index_name)
+        logger.info("Creates index %s with %s shards and %s replicas."%(
+            indexName, indexShards, indexReplicas)
+            )
+        
+        print("Index %s don't exist, creating"%indexName)
+        print("self.elasticShards: %s, self.elasticReplicas: %s"%(
+            indexShards, indexReplicas))
         try:
-            es = self.conn()
-            es.indices.create(index=index_name, 
+            self.es.indices.create(index=indexName, 
                               body='{"settings":{"index":{"number_of_shards":%s,"number_of_replicas":%s}}}'%
-                              ( self.elasticShards, self.elasticReplicas))
-            logger.info("Creates the index %s."%(index_name))
+                              (indexShards, indexReplicas))
+            logger.info("Creates the index %s."%(indexName))
         except ElasticsearchException as e:
-            logger.error("Error when try to creates the index %s.Error %s"%(index_name,e))
+            logger.error("Error when try to creates the index %s.Error %s"%(indexName,e))
             pass
         return True
         

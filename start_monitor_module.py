@@ -30,6 +30,12 @@ class MonitorModule(object):
             print("Stream: \n ",telemetry)
             print("Index Name: ",data.elasticIndex)
             print("ES Index Exist: ",ESI.is_index_exist(data.elasticIndex))
+            print("ES Index Exist Type: ",type(ESI.is_index_exist(data.elasticIndex)))
+            if ESI.is_index_exist(data.elasticIndex) == False:
+                ESI.create_index(data.elasticIndex,
+                                 data.elasticShards,
+                                 data.elasticReplicas
+                                 )
             logger.debug("Connection successfully")
             logger.debug("Formatting data ...")
             indexPath ="%s%s"%(data.indexConf, data.elasticFile)

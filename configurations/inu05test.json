@@ -1,4 +1,4 @@
-{"Unit to Monitorize":{
+{"inu05":{
     "description":[
         {"value" : ["iClkFreq", "float"]},
         {"value" : ["iDataFreq", "float"]},
