@@ -1,0 +1,46 @@
+{"Py-ES Storage":{
+    "unit description":{
+        "description":"Contiene los datos de la unidad a ser monitoreada. Type puede ser antenna, demodulator o sys_ingest.",
+        "name":"INGESTION UNIT 05",
+        "type":"sys_ingest",
+        "ip": "10.0.0.135",
+        "port":18182,
+        "socket timeout": 7
+        },
+    "program configuration":{
+        "description": "Contiene la informacion de configuracion del programa.",
+        "structure":{
+            "logs":["Logs", "monitor.log"],
+            "configurations": "configurations/",
+            "docker conf": "Dockerfile",
+            "index conf": "configurations/"           
+            },
+        "configuration":{
+            "slow refresh": 5,
+            "quick refresh": 1,
+            "start before": 300
+            },
+        "data server":{
+            "description": "Multicast address to publish data.",
+            "host": "239.192.1.100",
+            "port":10405
+            },
+        "cluster info":{
+        	"name": "S-MONCGSSESCluster01-S",
+            "host":["10.0.3.57","10.0.3.58"],
+            "port":9200,
+            "user":"",
+            "passwd":""
+            },
+        "index configuration":{
+            "name":"inu05test",
+            "type": "ingestion unit",
+            "time based":"True",
+            "time format":"%Y%m%d",
+            "replicas":3,
+            "shards":6,
+            "definition": "inu05test.json"
+            }
+        }
+    }
+}
