@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//es_index__module/dataFormatting.py=utf-8
+encoding//es_index__module/elastic.py=utf-8
+encoding//es_index__module/load_index_conf.py=utf-8
+encoding//monitor_unit/__init__.py=utf-8
+encoding//monitor_unit/unit.py=utf-8
+encoding/load_config.py=utf-8
+encoding/start_monitor_module.py=utf-8
