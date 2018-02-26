@@ -1,15 +1,12 @@
 #!/usr/bin/python3
 # coding: utf-8
 
-from __future__ import absolute_import
-
 from monitor_unit import StartService as SS
 from es_index__module import ESIndices
-from data_server import DataServer
-from load_config import ConfigData as CD
+
 from datetime import datetime
 from time import sleep
-from multiprocessing import Queue, Process
+from load_config import ConfigData as CD
 import logging
 
 logger = logging.getLogger(__name__)

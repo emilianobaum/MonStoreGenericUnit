@@ -35,6 +35,5 @@ class StartService(Monitor):
         __last_revision__= "2018-02-06"    
         
         self.telemetry = self.monitoreo(data)
-#         print("Unit Telemetry: ",self.telemetry)
         
         

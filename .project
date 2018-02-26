@@ -3,6 +3,7 @@
 	<name>GenericMonitorStoreUnit</name>
 	<comment></comment>
 	<projects>
+		<project>Unit Status Web Monitor</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

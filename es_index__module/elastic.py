@@ -96,6 +96,7 @@ class ESIndices(ESCluster):
 #         print("DATA: ",telemetry)
         data2index = LIC(elasticFile, telemetry)
 #         print("data2index ",data2index.msg)
+
         try:
             self.es.index(index = indexName, doc_type = indexType, 
                           timestamp = datetime.utcnow().isoformat(), 

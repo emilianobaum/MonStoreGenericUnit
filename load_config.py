@@ -107,7 +107,7 @@ class ConfigData():
         self.srvrHost = data["data server"]["host"]
         self.srvrPort = data["data server"]["port"]
         self.srvrListen = data["data server"]["listen"]
-        
+
     def __init__(self, file):
         
         self.load_file(file)

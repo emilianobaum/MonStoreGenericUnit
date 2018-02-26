@@ -18,17 +18,14 @@ class LoadIndexConfiguration():
             f = open(file)
             self.indexConf = load(f)
             f.close()
-#             print("Open configuration file %s." % (file))
         except (IOError,OSError, ValueError) as e:
-#             print("Error ",e)
+            print("Error ",e)
             logger.error(('Error reading configuration file -> %s. Error -> %s'
                            % (file, e)))
             exit()
     
     def __analize_data(self, telemetryValue, fieldType):
         
-#         print("Field Type: ",fieldType)
-#         print("Telemetry Value: ",telemetryValue)
         if fieldType == 'int':
             value = int(telemetryValue)
         elif fieldType == 'float':
@@ -41,24 +38,15 @@ class LoadIndexConfiguration():
         return value
     
     def make_json(self, telemetry):
-#         print("Make index stream")
         self.msg = {}
         self.msg['@timestamp'] = datetime.utcnow()
         telemetryId = telemetry[0]
         telemetryData = telemetry[1].split(";")
-#         print("telemetryData ",telemetryData)
-#         print("Len telemetry data: ",(len(telemetryData)))
         i = 0
         for key in self.indexConf[telemetryId]['description']:
-#             print("Indice %s:%s "%(key,value))
             fieldName = key['value'][0]
             fieldType = key['value'][1]
             try:
-#                 print("Field Name: %s"%(fieldName))
-#                 print("Field Type: %s"%(fieldType))
-#                 print("Telemetry type: ",type(telemetry))
-#                 print("Telemetry i: ",(telemetryData[i]))             
-#                 self.__analize_data(telemetryData[i], fieldType)
                 self.msg[fieldName] = self.__analize_data(telemetryData[i], fieldType)
             except IndexError:
                 logger.debug("No data available for %s. Complete with 'no data' string"%fieldName)
