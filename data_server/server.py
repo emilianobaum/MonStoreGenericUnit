@@ -1,13 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-__author__ = "Emiliano A. Baum"
-__contact__ = "emilianobaum@conae.gov.ar"
-__copyrigth__ = "2017/04/27, Data Server Unit"
-__last_revision__= "2017-10-02"
-__license__ = "GPLv3"
-__version__ = "2.0, 20171002. According python3. Include activity list."
-__description__ = "Data server to distribute telemetry and activity list\
- for the equipment defined in configuration file."
+
 
 from sys import  exit
 from time import sleep
@@ -17,82 +10,57 @@ import logging
 
 logger = logging.getLogger('Monitor Unit.Data Server')
 
-class DataServer(object):
+# host = "127.0.0.1"
+# port = 2345
+
+class CreateServer():
     
-    def __create_socket(self):
+    def create_socket(self, host, port):
         #===============================================================
         # Creates the  socket to publish telemetry stream
         #===============================================================
+        print("HOST: ",host)
+        print("PORT: ",port)
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 20)
-            s.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP,  1)
-            s.settimeout(6.0)
-        except socket.error as msg:
-            logger. error("Error creating socket %s"% msg)
-            s.close()
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        except OSError as msg:
+            print("MSG: ",msg)
             s = None
-            exit(1)
+            exit()
+        try:
+            s.bind((host, port))
+            s.listen(5)
+        except OSError as msg:
+            print("MSG: ",msg)
+            s.close()
+            exit()
         return s
 
-    def __data_server(self, s, unit, telemetry, activities, host, port):
-        data = '%s | %s |' % (datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+    def data_server(self, s, unit, unit_telemetry):
+        data2send = '%s | %s |' % (datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
                             unit)
-        if type(telemetry ) == list :
-            for n in telemetry:
+        telemetry = unit_telemetry.get()
+        if type(telemetry) == list :
+            data2send += telemetry[0]
+            for n in telemetry[1:]:
                 if type(n) == list:
-                    data += ','.join(n)
+                    data2send += ','.join(n)
                 else:
                     if len(n) == 0:
-                        data += "%s," % n
+                        data2send += "%s," % n
                     else:
-                        data += ",%s" % n
+                        data2send += ",%s" % n
         else:
-            data += "%s" % telemetry
-        
-        # Added activitie list
-        data += "|Activities assign to the unit: %s" % activities
-        # Sending data to multidicast address activity
-        s.sendto(data.encode(), (host, port))
-        
+            data2send += "%s"%(telemetry)
+        print("Data 2 send: ",data2send)        
+        conn, addr = s.accept()
+        print('Connected by', addr)
+        data = conn.recv(10)
+        print("Data: ",data)
+        conn.send(data2send.encode())
         return True
-    
-    def main_srvr(self,  unit_telemetry, timer):
-        """
-        Start data server.
-        """
-        unit = self.cfg["unit description"]["name"]
-        host = self.cfg["program configuration"]["data server"]["host"]
-        port = self.cfg["program configuration"]["data server"]["port"]
+
+
+                
         
-        refresh = [int(self.cfg['program configuration']
-                            ['configuration']['slow refresh']), False]
-        s = self.__create_socket()
-        while 1:
-            try:
-                telemetry = unit_telemetry.get()
-                logger.debug("Telemetry received in Data Server %s." %
-                                                            telemetry)
-                if timer.empty() == False:
-                    refresh = timer.get()
-                if s != None:
-                    self.__data_server(s, unit, telemetry, refresh[1],
-                                                    host, port)
-                """
-                Es importante el refresh, de lo contrario toma los dos 
-                elementos guardados en la Queue
-                """
-                sleep(refresh[0])
-            except socket.error as e: 
-                logger.error("Socket error (%s), retry connection" % e)
-                try:
-                    s.close()
-                except:pass
-                sleep(refresh)
-                s = self.__create_socket()
-                pass
-            except Exception as e:
-                logger.critical("Undefined Fatal Error in data server\
-                                                            %s." % e)
-                pass
-        return True

@@ -26,11 +26,11 @@ class Monitor(object):
             </INU></query></queryVars>\
             </I_INU-S></aXPNetMessage></Execute></soap:Body>\
             </soap:Envelope>')
-        print("CFG: ",cfg)
+#         print("CFG: ",cfg)
         ip = cfg.unitIp
         puerto= cfg.unitPort
-        print("IP: ",ip)
-        print("Puerto: ",puerto)
+#         print("IP: ",ip)
+#         print("Puerto: ",puerto)
         try:
             s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((ip, int(puerto)))

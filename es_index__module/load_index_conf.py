@@ -18,17 +18,17 @@ class LoadIndexConfiguration():
             f = open(file)
             self.indexConf = load(f)
             f.close()
-            print("Open configuration file %s." % (file))
+#             print("Open configuration file %s." % (file))
         except (IOError,OSError, ValueError) as e:
-            print("Error ",e)
+#             print("Error ",e)
             logger.error(('Error reading configuration file -> %s. Error -> %s'
                            % (file, e)))
             exit()
     
     def __analize_data(self, telemetryValue, fieldType):
         
-        print("Field Type: ",fieldType)
-        print("Telemetry Value: ",telemetryValue)
+#         print("Field Type: ",fieldType)
+#         print("Telemetry Value: ",telemetryValue)
         if fieldType == 'int':
             value = int(telemetryValue)
         elif fieldType == 'float':
@@ -41,7 +41,7 @@ class LoadIndexConfiguration():
         return value
     
     def make_json(self, telemetry):
-        print("Make index stream")
+#         print("Make index stream")
         self.msg = {}
         self.msg['@timestamp'] = datetime.utcnow()
         telemetryId = telemetry[0]
@@ -68,6 +68,7 @@ class LoadIndexConfiguration():
                 logger.critical("Exit by error ",e)
                 exit(0)
             i += 1
+
     def __init__(self, file, telemetry):
         
         __description__ = "Load index configuration for indexing data, return json doc"

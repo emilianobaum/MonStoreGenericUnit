@@ -21,9 +21,10 @@
             "start before": 300
             },
         "data server":{
-            "description": "Multicast address to publish data.",
-            "host": "239.192.1.100",
-            "port":10405
+            "description": "Server to publish data.",
+            "host": "127.0.0.1",
+            "port":10405,
+            "listen":5
             },
         "cluster info":{
         	"name": "S-MONCGSSESCluster01-S",
