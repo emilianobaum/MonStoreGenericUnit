@@ -1,1 +1,3 @@
 The telemetry id at the  beginning of the stream must be equal at the root tag in json file index description
+
+This version is for Kratos CRT demodulator.

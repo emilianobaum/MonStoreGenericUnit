@@ -7,14 +7,14 @@ from elasticsearch import Elasticsearch, ElasticsearchException, ConnectionTimeo
 from datetime import datetime
 import logging
 
-logger = logging.getLogger('Py-ES Storage.elastic')
+logger = logging.getLogger('Data Server.Elastic.elastic')
 
 
 class ESCluster():
     """
     Connection and indexing data in the cluster.
     """
-    def conn(self,data):        
+    def conn(self,data):
         """Create connection with the cluster."""
         try:
             #~ Load elastic variables.
@@ -23,7 +23,7 @@ class ESCluster():
                 conexion.append('http://%s:%s@%s:%s'%(data.elasticUser, 
                                                       data.elasticPassword, n, 
                                                       data.elasticPort)
-                )
+                                                      )
                 #~ conexion.append('%s:%s'%(n, self.elastic_port))
             self.es = Elasticsearch(conexion, username= data.elasticUser, 
                                password= data.elasticPassword, 

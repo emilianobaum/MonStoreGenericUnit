@@ -4,11 +4,11 @@
 import socket
 import logging
 
-logger = logging.getLogger('Monitor Unit.unit')
+logger = logging.getLogger('Monitor & Indexing Unit.Monitor.Unit')
 
 class Monitor(object):
     
-    def monitoreo(self, cfg):
+    def monitor(self, cfg):
         comando = ('<?xml version="1.0" encoding="utf-8"?>\
             <soap:Envelope xmlns:\
             xsi="http://www.w3.org/2001/XMLSchema-instance"\
@@ -37,8 +37,8 @@ class Monitor(object):
             logger.info("Message send ...")
             recibido = s.recv(2048)
             logger.debug("Message close ...")
-            unitTelemetry = self.format_stream(recibido.decode())
-            return unitTelemetry
+            telemetry = self.format_stream(recibido.decode())
+            return telemetry
         except Exception as e:
             logger.error("Error %s conectado con la unidad."%e)
             pass
@@ -69,4 +69,3 @@ class Monitor(object):
         msje =  ['inu05',msje]
         return msje
     
-            

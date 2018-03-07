@@ -12,7 +12,7 @@ __description__ = "Load cofiguration from setup file."
 from json import load
 import logging
 
-logger = logging.getLogger('Py-ES Storage Tool.Configuration')
+logger = logging.getLogger("Monitor & Indexing Unit.Load Config")
 
 class ConfigData():
     """Extracts data from configuration files."""

@@ -1,9 +1,10 @@
 <<<<<<< HEAD
 *.pyc
 *project*
-*.di*.pyc
-*project*
 *.dia
+*.settings
+*.autosave
+docs/*
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/

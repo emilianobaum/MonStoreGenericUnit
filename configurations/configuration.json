@@ -22,7 +22,7 @@
             },
         "data server":{
             "description": "Server to publish data.",
-            "host": "127.0.0.1",
+            "host": "localhost",
             "port":10405,
             "listen":5
             },
