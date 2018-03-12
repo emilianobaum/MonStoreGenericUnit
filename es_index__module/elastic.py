@@ -81,8 +81,12 @@ class ESIndices(ESCluster):
         """
         Verifies index exists. Check
         """
-        indexExist = self.es.indices.exists(index=indexName)
-        return indexExist
+        try:
+            indexExist = self.es.indices.exists(index=indexName)
+        except ElasticsearchException as err:
+            return indexExist
+            logger.error("Error checking index exist (%s)"%err)
+            pass
 
     def indexing_data(self, indexName, indexType, telemetry, 
                       elasticDefinition, elasticFile):
@@ -90,12 +94,7 @@ class ESIndices(ESCluster):
         Inserts the data in the index who defined in configuration 
         file. The format time for index timestamp is ISO 8601.
         """
-#         print("IndexName: ",indexName)
-#         print("IndexType: ",indexType)
-#         print("ElasticFile: ",elasticFile)
-#         print("DATA: ",telemetry)
         data2index = LIC(elasticFile, telemetry)
-#         print("data2index ",data2index.msg)
 
         try:
             self.es.index(index = indexName, doc_type = indexType, 
