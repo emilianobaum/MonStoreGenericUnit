@@ -5,21 +5,19 @@ from json import load
 from sys import exit
 from datetime import datetime
 import logging
+import logging.handlers
 
-logger = logging.getLogger('Py-ES Storage.Load Index Configuration')
+logger = logging.getLogger('Monitor & Indexing Unit.Load Index Configuration')
 
 class LoadIndexConfiguration():
     
     def load_file(self, file):
-        """
-        Load configuration file.
-        """
+#         Load configuration file.
         try:
             f = open(file)
             self.indexConf = load(f)
             f.close()
         except (IOError,OSError, ValueError) as e:
-            print("Error ",e)
             logger.error(('Error reading configuration file -> %s. Error -> %s'
                            % (file, e)))
             exit()
