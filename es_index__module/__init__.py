@@ -3,7 +3,8 @@
 from __future__ import absolute_import
 
 from .elastic import ESCluster, ESIndices
-
+import logging
+import logging.handlers
 
 
 __author__ = "Emiliano A. Baum"

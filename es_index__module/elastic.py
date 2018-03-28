@@ -6,8 +6,9 @@ from .load_index_conf import LoadIndexConfiguration as LIC
 from elasticsearch import Elasticsearch, ElasticsearchException, ConnectionTimeout, TransportError
 from datetime import datetime
 import logging
+import logging.handlers
 
-logger = logging.getLogger('Data Server.Elastic.elastic')
+logger = logging.getLogger('Monitor & Indexing Unit.Elastic.elastic')
 
 
 class ESCluster():
@@ -15,21 +16,24 @@ class ESCluster():
     Connection and indexing data in the cluster.
     """
     def conn(self,data):
-        """Create connection with the cluster."""
+        """
+        Create connection with the cluster.
+        """
         try:
-            #~ Load elastic variables.
+#             Load elastic variables.
             conexion = []
             for n in data.elasticHost:
                 conexion.append('http://%s:%s@%s:%s'%(data.elasticUser, 
                                                       data.elasticPassword, n, 
                                                       data.elasticPort)
                                                       )
-                #~ conexion.append('%s:%s'%(n, self.elastic_port))
             self.es = Elasticsearch(conexion, username= data.elasticUser, 
                                password= data.elasticPassword, 
-                               timeout=5, request_timeout=1, 
+                               timeout=10, request_timeout=10, 
+                               sniff_timeout=1000,
                                verify_certs=False, retry_on_timeout=True
                                )
+            logger.debug("Connection with the cluster  make it.")
         except TransportError as e:
             logger.critical("Error connection with the cluster: %s."%e)
         except ConnectionTimeout as e:
@@ -48,9 +52,11 @@ class ESCluster():
         return info
     
     def status(self, index, data):
-        """Display status of the cluster."""
+        """
+        Display status of the cluster.
+        """
         es = self.conn(data)
-        #Hay que reemplazar este comando por el del cluster, este muestra estado de un indice.
+#         Hay que reemplazar este comando por el del cluster, este muestra estado de un indice.
         index= es.cat.indices(index=index,h='health,status,index,store.size',pri='false',bytes='k',v=True)
         return True
     
@@ -59,7 +65,6 @@ class ESCluster():
         List open index in the cluster.
         """
         try:
-#             es = self.conn(data)
             if index == '':
                 indices = self.es.cat.indices(h='health,status,index,store.size',pri='false',bytes='k',v=True)
             else:
@@ -83,10 +88,9 @@ class ESIndices(ESCluster):
         """
         try:
             indexExist = self.es.indices.exists(index=indexName)
-        except ElasticsearchException as err:
             return indexExist
-            logger.error("Error checking index exist (%s)"%err)
-            pass
+        except:  return False 
+        
 
     def indexing_data(self, indexName, indexType, telemetry, 
                       elasticDefinition, elasticFile):
@@ -94,16 +98,26 @@ class ESIndices(ESCluster):
         Inserts the data in the index who defined in configuration 
         file. The format time for index timestamp is ISO 8601.
         """
-        data2index = LIC(elasticFile, telemetry)
-
         try:
-            self.es.index(index = indexName, doc_type = indexType, 
-                          timestamp = datetime.utcnow().isoformat(), 
-                          body = data2index.msg)
-        except ElasticsearchException as e:
-            print("ERROR: ",e)
+            data2index = LIC(elasticFile, telemetry)
+            (self.es.index(index = indexName, doc_type = indexType, 
+                           timestamp = datetime.utcnow().isoformat(), 
+                           body = data2index.msg))
+            logger.debug("Data indexing ok.")
+        except TypeError as err:
+            logger.error(
+                "Error formatting data for %s. %s."%(indexName,e)
+                )
+            pass
+        except (ElasticsearchException, ConnectionTimeout, 
+                TransportError)as e:
             logger.error(
                 "Error inserting data %s in cluster: %s"%(indexName,e)
+                )
+            pass
+        except Exception as e:
+            logger.error(
+                "Undefined error for index %s,%s"%(indexName,e)
                 )
             pass
         return True
@@ -116,17 +130,20 @@ class ESIndices(ESCluster):
         logger.info("Creates index %s with %s shards and %s replicas."%(
             indexName, indexShards, indexReplicas)
             )
-        
-        print("Index %s don't exist, creating"%indexName)
-        print("self.elasticShards: %s, self.elasticReplicas: %s"%(
-            indexShards, indexReplicas))
         try:
             self.es.indices.create(index=indexName, 
                               body='{"settings":{"index":{"number_of_shards":%s,"number_of_replicas":%s}}}'%
                               (indexShards, indexReplicas))
             logger.info("Creates the index %s."%(indexName))
-        except ElasticsearchException as e:
-            logger.error("Error when try to creates the index %s.Error %s"%(indexName,e))
+        except (ElasticsearchException, ConnectionTimeout, TransportError) as e:
+            logger.error(
+                "Error when try to creates the index %s.Error %s"%(indexName,e)
+                )
+            pass
+        except Exception as e:
+            logger.error(
+                "Error when try to creates the index %s.Error %s"%(indexName, e)
+                )
             pass
         return True
         
@@ -207,8 +224,8 @@ class ESIndices(ESCluster):
             pass
         return status
 
-    def __init__(self):
-        _description__ = "Index operation over ElasticSearch cluster."
+#     def __init__(self):
+#         _description__ = "Index operation over ElasticSearch cluster."
         
         
 class ESSnapshot(ESCluster):
@@ -223,7 +240,9 @@ class ESSnapshot(ESCluster):
         logger.debug("Create_snapshot: ",snapshot_name)
         logger.info("Create_snapshot %s."%snapshot_name)
         try:
-            resp = es.snapshot.create(repository=repository,snapshot=snapshot_name,body=body)
+            resp = es.snapshot.create(
+                repository=repository,snapshot=snapshot_name, 
+                body=body)
         except Exception as e:
             logger.error("Error making snapshot %s. Code %s."%(body,e))
             resp = e

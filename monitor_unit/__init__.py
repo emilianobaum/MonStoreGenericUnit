@@ -18,21 +18,13 @@ class StartService(Monitor):
         """
         with open(file, "r") as fp:
             config = load(fp)
-        #=======================================================================
-        # The main tag of configuration.json document 
-        # indicates the name of the unit to be monitoring.
-        #=======================================================================
+#          The main tag of configuration.json document indicates the name of the unit to be monitoring.
         self.cfg = config["Data Server & Monitor Configuration"]
         return True
     
     def __init__(self, data):
-
-        __author__ = "Emiliano A. Baum"
-        __contact__ = "ebaum@conae.gov.ar"
-        __copyrigth__ = "2018-01-26, Monitoring unit module."
-        __license__ = "GPLv3"
-        __version__ = ("20180202, v3.0 Using docker running like service")
-        __last_revision__= "2018-02-06"
+        __description__ = ("Generic monitor unit module. Replace the unit module with\
+         the new one but don't touch this module.")
         self.telemetry = self.monitor(data)
         
         
