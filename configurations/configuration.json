@@ -1,4 +1,4 @@
-{"Py-ES Storage":{
+{"Py-SrvrMonStore":{
     "unit description":{
         "description":"Contiene los datos de la unidad a ser monitoreada. Type puede ser antenna, demodulator o sys_ingest.",
         "name":"INGESTION UNIT 05",
@@ -22,25 +22,25 @@
             },
         "data server":{
             "description": "Server to publish data.",
-            "host": "localhost",
+            "host": "0.0.0.0",
             "port":10405,
             "listen":5
             },
         "cluster info":{
-        	"name": "S-MONCGSSESCluster01-S",
+        	"name": "S-CGSSESCluster01-S",
             "host":["10.0.3.57","10.0.3.58"],
             "port":9200,
             "user":"",
             "passwd":""
             },
         "index configuration":{
-            "name":"inu05test",
+            "name":"inu05",
             "type": "ingestion unit",
             "time based":"True",
             "time format":"%Y%m%d",
             "replicas":3,
             "shards":6,
-            "definition": "inu05test.json"
+            "definition": "inu05.json"
             }
         }
     }

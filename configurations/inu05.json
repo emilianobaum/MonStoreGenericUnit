@@ -1,0 +1,16 @@
+{"INGESTION UNIT 05":{
+	"description":[
+            {"value" : ["iClkFreq", "float"]},
+            {"value" : ["iDataFreq", "float"]},
+            {"value" : ["iRxTotalBytes", "float"]},
+            {"value" : ["iUSBRate", "float"]},
+            {"value" : ["sClkSample", "string"]},
+            {"value" : ["sFileName", "string"]},
+            {"value" : ["sClkSampleSet", "string"]},
+            {"value" : ["sStartTime", "string"]},
+            {"value" : ["sStopTime", "string"]},
+            {"value" : ["sUnitStatus", "string"]},
+            {"value" : ["sUnitAlarms", "string"]}
+            ]
+        }
+}
