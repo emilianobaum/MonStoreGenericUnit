@@ -19,8 +19,9 @@ class DataServer(CreateServer):
             try:
                 if not unitTelemetry.empty():
                     telemetry = unitTelemetry.get()
-                    print("Telemetry: ",telemetry)
+#                     print("Telemetry: ",telemetry)
                     self.__load_definition( telemetry[0], elasticDefinition)
+                    
                     self.data_server(s, unit, telemetry, 
                                      self.__load_definition(
                                          telemetry[0], elasticDefinition)

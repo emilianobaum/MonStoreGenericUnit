@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 from .elastic import ESCluster, ESIndices
+from elasticsearch import Elasticsearch
 import logging
 import logging.handlers
 

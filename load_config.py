@@ -15,7 +15,9 @@ import logging
 logger = logging.getLogger("Monitor & Indexing Unit.Load Config")
 
 class ConfigData():
-    """Extracts data from configuration files."""
+    """
+    Extracts data from configuration files.
+    """
     def load_file(self, file):
         """
         Load configuration file.
@@ -37,7 +39,7 @@ class ConfigData():
         return True
 
     def unit_description(self):
-        data = (self.data['Py-ES Storage']["unit description"])
+        data = (self.data['Py-SrvrMonStore']["unit description"])
         
         self.unitName = data["name"]
         self.unitIp = data["ip"]
@@ -52,8 +54,7 @@ class ConfigData():
         Data for Python ElasticSearch Storage Tool 
          module to connect with the cluster.
         """
-        print("SELF DATA: ",(self.data['Py-ES Storage']["program configuration"]))
-        data = (self.data['Py-ES Storage']["program configuration"])
+        data = (self.data['Py-SrvrMonStore']["program configuration"])
         self.elasticName = data["cluster info"]["name"]
         self.elasticHost = data["cluster info"]["host"]
         self.elasticPort = data["cluster info"]["port"]
@@ -75,7 +76,7 @@ class ConfigData():
 
     def program_structure(self):
         """Creates directory and static files."""
-        data = self.data['Py-ES Storage']["program configuration"]
+        data = self.data['Py-SrvrMonStore']["program configuration"]
         self.dirLog = data["structure"]["logs"][0]
         self.fileLog = data["structure"]["logs"][1]
         self.dirConf = data["structure"]["configurations"]
@@ -103,7 +104,7 @@ class ConfigData():
         return True
 
     def server_configuration(self):
-        data = (self.data['Py-ES Storage']["program configuration"])
+        data = (self.data['Py-SrvrMonStore']["program configuration"])
         self.srvrHost = data["data server"]["host"]
         self.srvrPort = data["data server"]["port"]
         self.srvrListen = data["data server"]["listen"]

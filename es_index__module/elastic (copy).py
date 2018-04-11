@@ -114,10 +114,12 @@ class ESIndices(ESCluster):
             logger.error(
                 "Error inserting data %s in cluster: %s"%(indexName,e)
                 )
+            pass
         except Exception as e:
             logger.error(
                 "Undefined error for index %s,%s"%(indexName,e)
                 )
+            pass
         return True
         
     def create_index(self, indexName, indexShards, indexReplicas):

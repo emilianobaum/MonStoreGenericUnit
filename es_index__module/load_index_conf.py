@@ -23,8 +23,7 @@ class LoadIndexConfiguration():
             exit()
     
     def __analize_data(self, telemetryValue, fieldType):
-        
-        if fieldType == 'int':
+        if fieldType == 'integer':
             value = int(telemetryValue)
         elif fieldType == 'float':
             value = float(telemetryValue)
@@ -32,8 +31,10 @@ class LoadIndexConfiguration():
             value = chr(telemetryValue)
         elif fieldType == 'string':
             value = str(telemetryValue)
-            
+        elif fieldType == 'date':
+            value = (telemetryValue)
         return value
+        
     
     def make_json(self, telemetry):
         self.msg = {}
@@ -50,6 +51,10 @@ class LoadIndexConfiguration():
                 logger.debug("No data available for %s. Complete with 'no data' string"%fieldName)
                 self.msg[fieldName] = 'No Data'
                 pass
+            except ValueError as err:
+                logger.debug("Error in conversion for %s value %s. Error: %s"%(fieldName, telemetryData, err))
+                print("Error in conversion for %s value %s. Error: %s"%(fieldName, telemetryData, err))
+                pass
             except BaseException as e:
                 logger.critical("Exit by error ",e)
                 exit(0)
@@ -61,5 +66,3 @@ class LoadIndexConfiguration():
         
         self.load_file(file)
         self.make_json(telemetry)
-        
-    
